@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 TASK_NAME="laptop14"
 ABSA_TYPE=tfm
-CUDA_VISIBLE_DEVICES=0,2,3 python /content/BERT-E2E-ABSA/main.py \
+CUDA_VISIBLE_DEVICES=0,2,3 python /content/russian-reviews-bert-e2e-absa/main.py \
                          --model_type bert \
                          --absa_type ${ABSA_TYPE} \
                          --tfm_mode finetune \

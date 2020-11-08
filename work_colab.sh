@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 TASK_NAME="laptop14"
-CUDA_VISIBLE_DEVICES=0 python /content/BERT-E2E-ABSA/work.py \
+CUDA_VISIBLE_DEVICES=0 python /content/russian-reviews-bert-e2e-absa/work.py \
                       --absa_home '/content/bert-tfm-laptop14-finetune' \
                       --ckpt '/content/bert-tfm-laptop14-finetune/checkpoint-2000' \
                       --model_type bert \
