@@ -34,11 +34,11 @@ Each entity of interest is masked with ENT tag.
 ## Quick Start
 * The valid tagging strategies/schemes (i.e., the ways representing text or entity span) in this project are **BIEOS** (also called **BIOES** or **BMES**), **BIO** (also called **IOB2**) and **OT** (also called **IO**). If you are not familiar with these terms, I strongly recommend you to read the following materials before running the program: 
 
-  a. [Inside–outside–beginning (tagging)](https://en.wikipedia.org/wiki/Inside%E2%80%93outside%E2%80%93beginning_(tagging)). 
+  1. [Inside–outside–beginning (tagging)](https://en.wikipedia.org/wiki/Inside%E2%80%93outside%E2%80%93beginning_(tagging)). 
   
-  b. [Representing Text Chunks](https://www.aclweb.org/anthology/E99-1023.pdf). 
+  2. [Representing Text Chunks](https://www.aclweb.org/anthology/E99-1023.pdf). 
   
-  c. The [paper](https://www.aclweb.org/anthology/D19-5505.pdf) associated with project. 
+  3. The [paper](https://www.aclweb.org/anthology/D19-5505.pdf) associated with project. 
 
 * **Train** the model on other ABSA dataset:
   1. Place data files in the directory `./data/[YOUR_DATASET_NAME]` (please note that you need to re-organize your data files so that it can be directly adapted to this project, following the input format of `./data/train.txt` should be OK).
