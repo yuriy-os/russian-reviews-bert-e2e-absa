@@ -16,7 +16,6 @@ Exploiting **BERT** **E**nd-**t**o-**E**nd **A**spect-**B**ased **S**entiment **
   - Conditional Random Fields (CRF)
   
 ## Task
-
 You have a sentence like this:
 
 > Средняя продолжительность жизни в рэфии 63 года у мужиков пенсия в 65 ... .травят едой из монеток и **ENT** соевой и пальмовой .рэфия занимает первое место среди стран третьего мира по смертности от сердечно сосудистых заболеваний .ни вывозит сердечко говноеды из эрзац продуктов отложение бляшек в виде холестерина херакс и тромб
@@ -26,11 +25,11 @@ Which contains a special token ENT. This token masks our point-of-interest, an a
 ## Dataset
 You can find the original dataset [here](https://drive.google.com/drive/folders/1xAnbhBhnh__wDPKEuvF_-M1skLt-kUWa?usp=sharing) and preprocessed dataset [here](https://drive.google.com/drive/folders/1--pUlrI1EnUfzwPmxdjCutOqqu6faQMa?usp=sharing).
 
-This dataset consists of scraped russian news articles, comments, marketplace item descriptions etc. 
+This dataset consists of scraped russian news articles, comments, reviews, marketplace item descriptions etc. 
 
-Each text item has a specified sentiment (1 - positive, 0 - neutral, -1 - negative).
+Each text item has specified sentiment (1 - positive, 0 - neutral, -1 - negative).
 
-Each entity of interest is masked with ENV tag.
+Each entity of interest is masked with ENT tag.
 
 ## Quick Start
 * The valid tagging strategies/schemes (i.e., the ways representing text or entity span) in this project are **BIEOS** (also called **BIOES** or **BMES**), **BIO** (also called **IOB2**) and **OT** (also called **IO**). If you are not familiar with these terms, I strongly recommend you to read the following materials before running the program: 
