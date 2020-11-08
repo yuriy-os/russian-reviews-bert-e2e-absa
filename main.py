@@ -505,7 +505,7 @@ def main():
 
     n_times = args.max_steps // args.save_steps + 1
     for i in range(1, n_times):
-        step = i * 100
+        step = i * args.save_steps
         log_file.write('\tStep %s:\n' % step)
         precision = test_results['precision_%s' % step]
         recall = test_results['recall_%s' % step]

@@ -154,7 +154,7 @@ def tag2ts(ts_tag_sequence):
         if sentiment != 'O':
             # current word is a subjective word
             sentiments.append(sentiment)
-        if pos == 'S':
+        if pos in {'S', 'T'}:
             # singleton
             ts_sequence.append((i, i, sentiment))
             sentiments = []

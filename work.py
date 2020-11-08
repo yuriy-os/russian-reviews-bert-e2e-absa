@@ -111,7 +111,7 @@ def predict(args, model, tokenizer):
     dataloader = DataLoader(dataset, sampler=sampler, batch_size=1)
     print("***** Running prediction *****")
 
-    total_preds, gold_labels = None, None
+    total_preds, gold_labels, total_pred_labels = None, None, None
     idx = 0
     if args.tagging_schema == 'BIEOS':
         absa_label_vocab = {'O': 0, 'EQ': 1, 'B-POS': 2, 'I-POS': 3, 'E-POS': 4, 'S-POS': 5,
@@ -121,7 +121,7 @@ def predict(args, model, tokenizer):
         absa_label_vocab = {'O': 0, 'EQ': 1, 'B-POS': 2, 'I-POS': 3,
         'B-NEG': 4, 'I-NEG': 5, 'B-NEU': 6, 'I-NEU': 7}
     elif args.tagging_schema == 'OT':
-        absa_label_vocab = {'O': 0, 'EQ': 1, 'T-POS': 2, 'T-NEG': 3, 'T-NEU': 4}
+        absa_label_vocab = {'O': 0, 'T-POS': 1, 'T-NEG': 2, 'T-NEU': 3}
     else:
         raise Exception("Invalid tagging schema %s..." % args.tagging_schema)
     absa_id2tag = {}
@@ -161,16 +161,20 @@ def predict(args, model, tokenizer):
                 pass
             p_ts_sequence = tag2ts(ts_tag_sequence=pred_tags)
             output_ts = []
+            #print(p_ts_sequence)
             for t in p_ts_sequence:
                 beg, end, sentiment = t
                 aspect = words[beg:end+1]
                 output_ts.append('%s: %s' % (aspect, sentiment))
-            print("Input: %s, output: %s" % (' '.join(words), '\t'.join(output_ts)))
+            #print("Input: %s, output: %s" % (' '.join(words), '\t'.join(output_ts)))
             # for evaluation
+            pred_labels = np.pad(pred_labels, (0, preds.shape[1] - len(pred_labels)), 'constant').reshape((1, -1))
             if total_preds is None:
                 total_preds = preds
+                total_pred_labels = pred_labels
             else:
                 total_preds = np.append(total_preds, preds, axis=0)
+                total_pred_labels = np.append(total_pred_labels, pred_labels, axis=0)
             if inputs['labels'] is not None:
                 # for the unseen data, there is no ``labels''
                 if gold_labels is None:
@@ -179,6 +183,8 @@ def predict(args, model, tokenizer):
                     gold_labels = np.append(gold_labels, inputs['labels'].detach().cpu().numpy(), axis=0)
         idx += 1
     if gold_labels is not None:
+        torch.save(gold_labels, 'gold_labels.pt')
+        torch.save(total_pred_labels, 'total_pred_labels.pt')
         result = compute_metrics_absa(preds=total_preds, labels=gold_labels, all_evaluate_label_ids=evaluate_label_ids,
                                       tagging_schema=args.tagging_schema)
         for (k, v) in result.items():

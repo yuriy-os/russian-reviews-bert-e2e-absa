@@ -27,7 +27,6 @@ from seq_utils import *
 
 logger = logging.getLogger(__name__)
 
-SMALL_POSITIVE_CONST = 1e-4
 
 class InputExample(object):
     """A single training/test example for simple sequence classification."""
@@ -116,7 +115,7 @@ class ABSAProcessor(DataProcessor):
 
     def get_labels(self, tagging_schema):
         if tagging_schema == 'OT':
-            return []
+            return ['O', 'T-POS', 'T-NEG', 'T-NEU']
         elif tagging_schema == 'BIO':
             return ['O', 'EQ', 'B-POS', 'I-POS', 'B-NEG', 'I-NEG', 'B-NEU', 'I-NEU']
         elif tagging_schema == 'BIEOS':
@@ -442,7 +441,7 @@ def compute_metrics_absa(preds, labels, all_evaluate_label_ids, tagging_schema):
         absa_label_vocab = {'O': 0, 'EQ': 1, 'B-POS': 2, 'I-POS': 3, 
         'B-NEG': 4, 'I-NEG': 5, 'B-NEU': 6, 'I-NEU': 7}
     elif tagging_schema == 'OT':
-        absa_label_vocab = {'O': 0, 'EQ': 1, 'T-POS': 2, 'T-NEG': 3, 'T-NEU': 4}
+        absa_label_vocab = {'O': 0, 'T-POS': 1, 'T-NEG': 2, 'T-NEU': 3}
     else:
         raise Exception("Invalid tagging schema %s..." % tagging_schema)
     absa_id2tag = {}
@@ -492,9 +491,9 @@ def compute_metrics_absa(preds, labels, all_evaluate_label_ids, tagging_schema):
         n_ts = n_tp_ts[i]
         n_g_ts = n_gold_ts[i]
         n_p_ts = n_pred_ts[i]
-        ts_precision[i] = float(n_ts) / float(n_p_ts + SMALL_POSITIVE_CONST)
-        ts_recall[i] = float(n_ts) / float(n_g_ts + SMALL_POSITIVE_CONST)
-        ts_f1[i] = 2 * ts_precision[i] * ts_recall[i] / (ts_precision[i] + ts_recall[i] + SMALL_POSITIVE_CONST)
+        ts_precision[i] = float(n_ts) / float(n_p_ts + 0.001)
+        ts_recall[i] = float(n_ts) / float(n_g_ts + 0.001)
+        ts_f1[i] = 2 * ts_precision[i] * ts_recall[i] / (ts_precision[i] + ts_recall[i] + 0.001)
 
     macro_f1 = ts_f1.mean()
 
@@ -507,9 +506,9 @@ def compute_metrics_absa(preds, labels, all_evaluate_label_ids, tagging_schema):
 
     # TP + FP
     n_p_total = sum(n_pred_ts)
-    micro_p = float(n_tp_total) / (n_p_total + SMALL_POSITIVE_CONST)
-    micro_r = float(n_tp_total) / (n_g_total + SMALL_POSITIVE_CONST)
-    micro_f1 = 2 * micro_p * micro_r / (micro_p + micro_r + SMALL_POSITIVE_CONST)
+    micro_p = float(n_tp_total) / (n_p_total + 0.001)
+    micro_r = float(n_tp_total) / (n_g_total + 0.001)
+    micro_f1 = 2 * micro_p * micro_r / (micro_p + micro_r + 0.001)
     scores = {'macro-f1': macro_f1, 'precision': micro_p, "recall": micro_r, "micro-f1": micro_f1}
     return scores
 
@@ -517,10 +516,6 @@ def compute_metrics_absa(preds, labels, all_evaluate_label_ids, tagging_schema):
 processors = {
     "laptop14": ABSAProcessor,
     "rest_total": ABSAProcessor,
-    "rest_total_revised": ABSAProcessor,
-    "rest14": ABSAProcessor,
-    "rest15": ABSAProcessor,
-    "rest16": ABSAProcessor,
 }
 
 output_modes = {
@@ -538,6 +533,5 @@ output_modes = {
     "rest_total": "classification",
     "rest14": "classification",
     "rest15": "classification",
-    "rest16": "classification",
-    "rest_total_revised": "classification",
+    "rest16": "classification"
 }
